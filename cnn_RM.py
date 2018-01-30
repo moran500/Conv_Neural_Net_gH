@@ -22,9 +22,21 @@ classifier = Sequential()
 classifier.add(Conv2D(32, (3, 3), input_shape = (64, 64, 3), activation = 'relu' ))
 
 # Max Pooling
-# toto vlastne zmensi obrazok a vytiahne z neho najvacsie hodnoty, na zmensenie pouzijeme maticu 2x2 co je
+# toto vlastne vytiahne zo vsetkych features maps ich najvacsie hodnoty a tiez zmensi rozmer kazdej feature map, na toto zmensenie pouzije maticu 2x2 co je
 # zadefinovane argumentom pool_size (2,2)
 classifier.add(MaxPooling2D(pool_size = (2, 2)))
 
+# Flattening
+# toto prehodi vsetky feature maps ktore su po max poolingu na jeden dlhy vektor ktory bude vstupnou vrstvou pre NN
+classifier.add(Flatten())
+
+# Connecting the CNN
+# toto je to iste ako v minulom priklade takze vytvorime jednu hidden layer s 128 nodmi
+# a jednu output layer s 1 vystupom
+classifier.add(Dense( units = 128, activation = 'relu'))
+classifier.add(Dense( units = 1, activation = 'sigmoid'))
+
+# Compile the CNN
+classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy' , metrics = ['accuracy'])
 
 #=============================================================================================================

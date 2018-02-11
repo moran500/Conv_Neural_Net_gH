@@ -108,11 +108,35 @@ classifier.save_weights('CNN_model_weights.h5')
 
 # home work - treba otestovat ako predikovat obrazok podla nami natrenovanej siete
 
-from keras.preprocessing.image import load_img, img_to_array
+import numpy as np
+from keras.preprocessing import image
 
-img = load_img('dataset/single_prediction/cat_or_dog_1.jpg', target_size = (64, 64))
-x = img_to_array(img)
-classifier.predict(x)
+# tato funkcia mi naloaduje obrazok ktory chcem odtestovat
+# druhy parameter je target_size a to je vlastne rozlisenie v akom chceme mat obrazok
+# musi to byt take iste rozlisenie ako je pouzite v modeli
+img = image.load_img('dataset/single_prediction/cat_or_dog_1.jpg', target_size = (64, 64))
+
+# tato funkcia mi vytvori z 2 dimenzionalneho obrazku, 3 dimensionalny ale nie ze by bol 3D
+# ale znamenato ze prida dimenziu pre farby. Ak je to farebny obrazok tak to budu 3 vrstvy
+img_array = image.img_to_array(img)
+
+# tato funkcia prida dalsiu dimensiu, lebo model na vstupe caka premennu so 4 dimensiami
+img_array_4_dims = np.expand_dims(img_array, axis = 0)
+
+# tu sa vytvori predikcia
+new_prediction = classifier.predict(img_array_4_dims)
+
+# tato funkcia nam ukaze na vystupe ake su jednotlive indexy pre jednotlive vysledky co chceme v nasom pripade:
+# {'cats': 0, 'dogs': 1}
+training_set.class_indices
+
+# vysledok predikcie je bud 1 alebo 0 a z predchadzajucej funkcie vieme ze 1 je dog a 0 je cat
+if new_prediction[0][0] == 1:
+    result = 'dog'
+else:
+    result = 'cat'
+
+
 
 
 
